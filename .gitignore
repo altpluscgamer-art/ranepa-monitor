@@ -1,0 +1,14 @@
+# учётные данные (шифрованные DPAPI) — никогда не коммитить
+auth_creds/
+
+# служебные данные монитора (создаются на месте запуска)
+services_history_*.csv
+monitoring_report_*.csv
+monitor_events_*.log
+services_history_archive.zip
+services_status.html
+last_state.txt
+
+# мусор
+Thumbs.db
+desktop.ini
