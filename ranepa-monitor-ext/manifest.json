@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Мониторинг сервисов РАНХиГС",
-  "version": "2.0",
-  "description": "Статус сервисов: значок с числом проблем, попап-таблица с точечной проверкой каждого сервиса. Данные — локальный монитор (localhost:8765).",
+  "version": "2.1",
+  "description": "Статус сервисов: значок с числом проблем, попап-таблица с точечной проверкой, график доступности за 6 часов. Данные — локальный монитор (localhost:8765).",
   "permissions": ["alarms", "storage"],
   "host_permissions": ["http://localhost:8765/*"],
   "background": { "service_worker": "background.js" },
