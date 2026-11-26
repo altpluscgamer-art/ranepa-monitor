@@ -49,9 +49,36 @@ async function load() {
       div.appendChild(right);
       listEl.appendChild(div);
     }
+    loadHist();
   } catch (e) {
     metaEl.textContent = "Сервер мониторинга не отвечает";
     listEl.innerHTML = '<div class="row fail"><span class="name">Запустите run_monitor.bat</span></div>';
+  }
+}
+
+async function loadHist() {
+  const histEl = document.getElementById("hist");
+  if (!histEl) return;
+  try {
+    const resp = await fetch("http://localhost:8765/hist", { cache: "no-store" });
+    const data = await resp.json();
+    const services = Array.isArray(data.services) ? data.services : [];
+    services.sort(function (a, b) { return String(a.service).localeCompare(String(b.service)); });
+    const cw = 12, ch = 8;
+    const w = 24 * cw, h = services.length * ch + 4;
+    let svg = '<svg width="' + w + '" height="' + h + '" xmlns="http://www.w3.org/2000/svg">';
+    services.forEach(function (s, ri) {
+      const cells = Array.isArray(s.cells) ? s.cells : [];
+      for (let ci = 0; ci < 24; ci++) {
+        const v = (cells.length >= 24) ? cells[ci] : 0;
+        const col = (v === 1) ? "#a5d6a7" : (v === 2) ? "#ffd54f" : (v === 3) ? "#e57373" : "#eceff1";
+        svg += '<rect x="' + (ci * cw) + '" y="' + (2 + ri * ch) + '" width="' + (cw - 1) + '" height="' + (ch - 1) + '" rx="1.5" fill="' + col + '"><title>' + s.service + '</title></rect>';
+      }
+    });
+    svg += '</svg>';
+    histEl.innerHTML = '<div class="histcap">Доступность за 6 часов — клетка = 15 минут: зелёный = успех, жёлтый = 4xx, красный = сбой, серый = нет данных</div>' + svg;
+  } catch (e) {
+    histEl.innerHTML = "";
   }
 }
 
