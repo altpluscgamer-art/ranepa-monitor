@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", load);
+﻿document.addEventListener("DOMContentLoaded", load);
 
 async function load() {
   const listEl = document.getElementById("list");
@@ -65,18 +65,28 @@ async function loadHist() {
     const services = Array.isArray(data.services) ? data.services : [];
     services.sort(function (a, b) { return String(a.service).localeCompare(String(b.service)); });
     const cw = 12, ch = 8;
-    const w = 24 * cw, h = services.length * ch + 4;
+    const labelW = 140, x0 = labelW + 4;
+    const w = x0 + 24 * cw, h = services.length * ch + 4 + 12;
+    const esc = function (s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); };
     let svg = '<svg width="' + w + '" height="' + h + '" xmlns="http://www.w3.org/2000/svg">';
     services.forEach(function (s, ri) {
       const cells = Array.isArray(s.cells) ? s.cells : [];
+      const nm = String(s.service);
+      const short = nm.length > 20 ? nm.substring(0, 19) + "…" : nm;
+      svg += '<text class="tlname" x="0" y="' + (2 + ri * ch + 6) + '" font-size="10">' + esc(short) + '</text>';
       for (let ci = 0; ci < 24; ci++) {
         const v = (cells.length >= 24) ? cells[ci] : 0;
         const col = (v === 1) ? "#a5d6a7" : (v === 2) ? "#ffd54f" : (v === 3) ? "#e57373" : "#eceff1";
-        svg += '<rect x="' + (ci * cw) + '" y="' + (2 + ri * ch) + '" width="' + (cw - 1) + '" height="' + (ch - 1) + '" rx="1.5" fill="' + col + '"><title>' + s.service + '</title></rect>';
+        svg += '<rect x="' + (x0 + ci * cw) + '" y="' + (2 + ri * ch) + '" width="' + (cw - 1) + '" height="' + (ch - 1) + '" rx="1.5" fill="' + col + '"><title>' + esc(s.service) + '</title></rect>';
       }
     });
+    const ty = services.length * ch + 14;
+    [[0, "-6 ч"], [6, "-4,5 ч"], [12, "-3 ч"], [18, "-1,5 ч"]].forEach(function (tk) {
+      svg += '<text class="tltime" x="' + (x0 + tk[0] * cw) + '" y="' + ty + '" font-size="9">' + tk[1] + '</text>';
+    });
+    svg += '<text class="tltime" x="' + (x0 + 23 * cw + cw - 1) + '" y="' + ty + '" font-size="9" text-anchor="end">сейчас</text>';
     svg += '</svg>';
-    histEl.innerHTML = '<div class="histcap">Доступность за 6 часов — клетка = 15 минут: зелёный = успех, жёлтый = 4xx, красный = сбой, серый = нет данных</div>' + svg;
+    histEl.innerHTML = '<div class="histcap">Доступность за 6 часов — клетка = 15 минут: зелёный = успех, жёлтый = 4xx, красный = сбой, серый = нет данных · справа — сейчас</div>' + svg;
   } catch (e) {
     histEl.innerHTML = "";
   }
