@@ -20,6 +20,7 @@ if exist "%DEST%\start_server_hidden.vbs" del /q "%DEST%\start_server_hidden.vbs
 if exist "%DEST%\run_auth_hidden.vbs" del /q "%DEST%\run_auth_hidden.vbs"
 if exist "%~dp0setup_creds.ps1" copy /y "%~dp0setup_creds.ps1" "%DEST%\" >nul
 if exist "%~dp0auth_config.csv" copy /y "%~dp0auth_config.csv" "%DEST%\" >nul
+if exist "%~dp0CHANGELOG.md" copy /y "%~dp0CHANGELOG.md" "%DEST%\" >nul
 if exist "%~dp0ranepa-monitor-ext" (
   if not exist "%DEST%\ranepa-monitor-ext" mkdir "%DEST%\ranepa-monitor-ext"
   copy /y "%~dp0ranepa-monitor-ext\*.*" "%DEST%\ranepa-monitor-ext\" >nul
