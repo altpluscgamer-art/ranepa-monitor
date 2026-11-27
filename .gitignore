@@ -5,9 +5,14 @@ auth_creds/
 services_history_*.csv
 monitoring_report_*.csv
 monitor_events_*.log
+daily_metrics_*.csv
 services_history_archive.zip
 services_status.html
 last_state.txt
+monitor_state.json
+cert_state.json
+sound_prefs.json
+monitor.lock
 
 # мусор
 Thumbs.db
